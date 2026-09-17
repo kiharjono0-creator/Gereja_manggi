@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uang Kas Keluarga - Nene Kapala Manggi</title>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --green: #059669;
+      --red: #dc2626;
+      --dark: #172033;
+      --muted: #64748b;
+      --light: #f1f5f9;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 12px 30px rgba(15, 23, 42, .08);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8fafc;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb, #38bdf8);
+      color: white;
+      padding: 22px 5%;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.2);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+    }
+
+    .brand h1 {
+      font-size: clamp(19px, 3vw, 28px);
+    }
+
+    .brand p {
+      opacity: .85;
+      font-size: 14px;
+    }
+
+    .admin-status {
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: 30px auto 50px;
+    }
+
+    .hero {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .hero h2 {
+      font-size: clamp(22px, 4vw, 34px);
+      margin-bottom: 5px;
+    }
+
+    .hero p {
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-light {
+      background: var(--light);
+      color: var(--dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 23px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::after {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      right: -25px;
+      bottom: -30px;
+      border-radius: 50%;
+      background: rgba(37,99,235,.08);
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      font-size: clamp(21px, 3vw, 30px);
+      font-weight: bold;
+    }
+
+    .income .summary-value {
+      color: var(--green);
+    }
+
+    .expense .summary-value {
+      color: var(--red);
+    }
+
+    .balance .summary-value {
+      color: var(--primary);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 23px;
+    }
+
+    .card h3 {
+      margin-bottom: 17px;
+      font-size: 19px;
+    }
+
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      min-height: 210px;
+    }
+
+    .transaction {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .transaction-name {
+      font-weight: bold;
+    }
+
+    .transaction-date {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .income-text {
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    .expense-text {
+      color: var(--red);
+      font-weight: bold;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 55px 10px;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .info-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .info-box span {
+      color: var(--muted);
+    }
+
+    .contact-card {
+      text-align: center;
+    }
+
+    .contact-card .btn {
+      margin-top: 15px;
+    }
+
+    .admin-panel {
+      display: none;
+      margin-bottom: 22px;
+      border: 2px solid #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .admin-panel.active {
+      display: block;
+    }
+
+    .admin-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 25px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      padding: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: min(450px, 100%);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.2);
+    }
+
+    .modal-box h3 {
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .hero {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .summary-grid,
+      .content-grid,
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions,
+      .admin-tools {
+        width: 100%;
+      }
+
+      .hero-actions .btn,
+      .admin-tools .btn {
+        flex: 1;
+      }
+    }
+
+    @media print {
+      .topbar {
+        background: white;
+        color: black;
+        box-shadow: none;
+      }
+
+      .hero-actions,
+      .admin-panel,
+      .admin-status,
+      .footer,
+      .pagination,
+      .btn {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .card,
+      .summary-card,
+      .hero {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-icon">👨‍👩‍👧‍👦</div>
+        <div>
+          <h1>Uang Kas Keluarga</h1>
+          <p>Nene Kapala Manggi</p>
+        </div>
+      </div>
+
+      <div class="admin-status" id="adminStatus">
+        👤 Pengguna umum
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <h2>Kas Keluarga</h2>
+        <p>Transparan · Tertib · Kekeluargaan</p>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn btn-outline" onclick="window.print()">🖨️ Cetak / PDF</button>
+        <button class="btn btn-success" onclick="shareWhatsApp()">📱 Bagikan WhatsApp</button>
+        <button class="btn btn-primary" onclick="openLogin()">🔐 Login Admin</button>
+      </div>
+    </section>
+
+    <section class="summary-grid">
+      <div class="summary-card income">
+        <div class="summary-label">💰 Total Pemasukan</div>
+        <div class="summary-value" id="totalIncome">Rp 0</div>
+      </div>
+
+      <div class="summary-card expense">
+        <div class="summary-label">💸 Total Pengeluaran</div>
+        <div class="summary-value" id="totalExpense">Rp 0</div>
+      </div>
+
+      <div class="summary-card balance">
+        <div class="summary-label">💵 Saldo Kas</div>
+        <div class="summary-value" id="totalBalance">Rp 0</div>
+      </div>
+    </section>
+
+    <section class="card admin-panel" id="adminPanel">
+      <h3>🔐 Panel Admin</h3>
+      <div class="admin-tools">
+        <button class="btn btn-success" onclick="openTransactionForm('income')">
+          ＋ Tambah Pemasukan
+        </button>
+        <button class="btn btn-danger" onclick="openTransactionForm('expense')">
+          ＋ Tambah Pengeluaran
+        </button>
+        <button class="btn btn-light" onclick="resetData()">♻️ Reset Data</button>
+        <button class="btn btn-light" onclick="logout()">Keluar</button>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="card">
+        <h3>💰 Riwayat Pemasukan</h3>
+        <div class="transaction-list" id="incomeList"></div>
+        <div class="pagination" id="incomePagination"></div>
+      </div>
+
+      <div class="card">
+        <h3>💸 Riwayat Pengeluaran</h3>
+        <div class="transaction-list" id="expenseList"></div>
+        <div class="pagination" id="expensePagination"></div>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <div class="card">
+        <h3>📢 Informasi Keluarga</h3>
+
+        <div class="info-box">
+          <strong>📌 Kegiatan keluarga</strong>
+          <span id="familyActivity">Belum ada informasi.</span>
+        </div>
+
+        <div class="info-box">
+          <strong>📌 Rencana keluarga</strong>
+          <span id="familyPlan">Belum ada informasi.</span>
+        </div>
+
+        <div class="info-box">
+          <strong>📌 Keperluan keluarga</strong>
+          <span id="familyNeed">Belum ada informasi.</span>
+        </div>
+
+        <div class="info-box">
+          <strong>📌 Pengumuman keluarga</strong>
+          <span id="familyAnnouncement">Belum ada informasi.</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom: 22px;">
+          <h3>🏦 Informasi Rekening</h3>
+
+          <div class="info-box">
+            <strong>🏦 Nama Bank</strong>
+            <span id="bankName">-</span>
+          </div>
+
+          <div class="info-box">
+            <strong>💳 Nomor Rekening</strong>
+            <span id="accountNumber">-</span>
+          </div>
+
+          <div class="info-box">
+            <strong>👤 Atas Nama</strong>
+            <span id="accountOwner">-</span>
+          </div>
+        </div>
+
+        <div class="card contact-card">
+          <h3>📱 Hubungi Keluarga</h3>
+          <p id="whatsappNumber">Nomor WhatsApp belum diatur</p>
+          <button class="btn btn-success" onclick="contactFamily()">💬 Hubungi</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Uang Kas Keluarga Nene Kapala Manggi © 2026
+  </footer>
+
+  <!-- Modal Login -->
+  <div class="modal" id="loginModal">
+    <div class="modal-box">
+      <h3>🔐 Login Admin</h3>
+
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="Masukkan username">
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Masukkan password">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-light" onclick="closeModal('loginModal')">Batal</button>
+        <button class="btn btn-primary" onclick="login()">Login</button>
+      </div>
+
+      <p style="margin-top: 15px; color: #64748b; font-size: 12px;">
+        Login awal: admin / 1234
+      </p>
+    </div>
+  </div>
+
+  <!-- Modal Transaksi -->
+  <div class="modal" id="transactionModal">
+    <div class="modal-box">
+      <h3 id="transactionTitle">Tambah Transaksi</h3>
+
+      <div class="form-group">
+        <label>Nama transaksi</label>
+        <input type="text" id="transactionName" placeholder="Contoh: Iuran keluarga">
+      </div>
+
+      <div class="form-group">
+        <label>Jumlah</label>
+        <input type="number" id="transactionAmount" placeholder="Contoh: 100000">
+      </div>
+
+      <div class="form-group">
+        <label>Tanggal</label>
+        <input type="date" id="transactionDate">
+      </div>
+
+      <div class="form-group">
+        <label>Keterangan</label>
+        <textarea id="transactionNote" rows="3" placeholder="Keterangan tambahan"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-light" onclick="closeModal('transactionModal')">Batal</button>
+        <button class="btn btn-primary" onclick="saveTransaction()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "kasKeluargaNeneKapalaManggi";
+    let activeType = "income";
+    let editingId = null;
+    let incomePage = 1;
+    let expensePage = 1;
+    const perPage = 5;
+
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      transactions: [],
+      family: {
+        activity: "Belum ada informasi.",
+        plan: "Belum ada informasi.",
+        need: "Belum ada informasi.",
+        announcement: "Belum ada informasi."
+      },
+      account: {
+        bank: "-",
+        number: "-",
+        owner: "-",
+        whatsapp: "-"
+      }
+    };
+
+    function formatRupiah(number) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+      }).format(number || 0);
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function render() {
+      const income = data.transactions
+        .filter(item => item.type === "income")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const expense = data.transactions
+        .filter(item => item.type === "expense")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      document.getElementById("totalIncome").textContent = formatRupiah(income);
+      document.getElementById("totalExpense").textContent = formatRupiah(expense);
+      document.getElementById("totalBalance").textContent = formatRupiah(income - expense);
+
+      renderTransactions("income");
+      renderTransactions("expense");
+
+      document.getElementById("familyActivity").textContent = data.family.activity;
+      document.getElementById("familyPlan").textContent = data.family.plan;
+      document.getElementById("familyNeed").textContent = data.family.need;
+      document.getElementById("familyAnnouncement").textContent = data.family.announcement;
+
+      document.getElementById("bankName").textContent = data.account.bank;
+      document.getElementById("accountNumber").textContent = data.account.number;
+      document.getElementById("accountOwner").textContent = data.account.owner;
+      document.getElementById("whatsappNumber").textContent =
+        data.account.whatsapp === "-" ? "Nomor WhatsApp belum diatur" : data.account.whatsapp;
+    }
+
+    function renderTransactions(type) {
+      const list = document.getElementById(type + "List");
+      const pagination = document.getElementById(type + "Pagination");
+      const page = type === "income" ? incomePage : expensePage;
+
+      const transactions = data.transactions
+        .filter(item => item.type === type)
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      const totalPages = Math.ceil(transactions.length / perPage) || 1;
+      const currentPage = Math.min(page, totalPages);
+      const start = (currentPage - 1) * perPage;
+      const visible = transactions.slice(start, start + perPage);
+
+      if (visible.length === 0) {
+        list.innerHTML = '<div class="empty">Belum ada data</div>';
+      } else {
+        list.innerHTML = visible.map(item => `
+          <div class="transaction">
+            <div>
+              <div class="transaction-name">${escapeHtml(item.name)}</div>
+              <div class="transaction-date">
+                ${item.date || "-"} ${item.note ? "· " + escapeHtml(item.note) : ""}
+              </div>
+              ${isAdmin() ? `
+                <div style="margin-top:8px; display:flex; gap:6px;">
+                  <button class="btn btn-light" style="padding:5px 8px;font-size:12px;"
+                    onclick="editTransaction('${item.id}')">Edit</button>
+                  <button class="btn btn-danger" style="padding:5px 8px;font-size:12px;"
+                    onclick="deleteTransaction('${item.id}')">Hapus</button>
+                </div>
+              ` : ""}
+            </div>
+            <div class="${type === "income" ? "income-text" : "expense-text"}">
+              ${type === "income" ? "+" : "-"} ${formatRupiah(item.amount)}
+            </div>
+          </div>
+        `).join("");
+      }
+
+      if (totalPages > 1) {
+        pagination.innerHTML = `
+          <button class="btn btn-light" onclick="changePage('${type}', -1)"
+            ${currentPage === 1 ? "disabled" : ""}>‹</button>
+          <span style="padding:10px;">${currentPage} / ${totalPages}</span>
+          <button class="btn btn-light" onclick="changePage('${type}', 1)"
+            ${currentPage === totalPages ? "disabled" : ""}>›</button>
+        `;
+      } else {
+        pagination.innerHTML = "";
+      }
+    }
+
+    function changePage(type, direction) {
+      if (type === "income") incomePage += direction;
+      else expensePage += direction;
+      render();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function isAdmin() {
+      return sessionStorage.getItem("kasAdmin") === "true";
+    }
+
+    function openLogin() {
+      if (isAdmin()) {
+        logout();
+        return;
+      }
+      document.getElementById("loginModal").classList.add("show");
+    }
+
+    function login() {
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      if (username === "admin" && password === "1234") {
+        sessionStorage.setItem("kasAdmin", "true");
+        closeModal("loginModal");
+        updateAdminView();
+        alert("Login admin berhasil.");
+      } else {
+        alert("Username atau password salah.");
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem("kasAdmin");
+      updateAdminView();
+      alert("Anda telah keluar dari mode admin.");
+    }
+
+    function updateAdminView() {
+      const panel = document.getElementById("adminPanel");
+      const status = document.getElementById("adminStatus");
+
+      if (isAdmin()) {
+        panel.classList.add("active");
+        status.textContent = "🔐 Mode admin aktif";
+      } else {
+        panel.classList.remove("active");
+        status.textContent = "👤 Pengguna umum";
+      }
+
+      render();
+    }
+
+    function openTransactionForm(type, id = null) {
+      if (!isAdmin()) {
+        alert("Silakan login sebagai admin terlebih dahulu.");
+        return;
+      }
+
+      activeType = type;
+      editingId = id;
+
+      const item = id ? data.transactions.find(transaction => transaction.id === id) : null;
+
+      document.getElementById("transactionTitle").textContent =
+        item ? "Edit Transaksi" :
+        type === "income" ? "Tambah Pemasukan" : "Tambah Pengeluaran";
+
+      document.getElementById("transactionName").value = item?.name || "";
+      document.getElementById("transactionAmount").value = item?.amount || "";
+      document.getElementById("transactionDate").value =
+        item?.date || new Date().toISOString().slice(0, 10);
+      document.getElementById("transactionNote").value = item?.note || "";
+
+      document.getElementById("transactionModal").classList.add("show");
+    }
+
+    function saveTransaction() {
+      const name = document.getElementById("transactionName").value.trim();
+      const amount = Number(document.getElementById("transactionAmount").value);
+      const date = document.getElementById("transactionDate").value;
+      const note = document.getElementById("transactionNote").value.trim();
+
+      if (!name || !amount || amount < 0 || !date) {
+        alert("Nama, jumlah, dan tanggal wajib diisi.");
+        return;
+      }
+
+      if (editingId) {
+        const index = data.transactions.findIndex(item => item.id === editingId);
+        data.transactions[index] = {
+          ...data.transactions[index],
+          name,
+          amount,
+          date,
+          note
+        };
+      } else {
+        data.transactions.push({
+          id: Date.now().toString(),
+          type: activeType,
+          name,
+          amount,
+          date,
+          note
+        });
+      }
+
+      saveData();
+      closeModal("transactionModal");
+      render();
+    }
+
+    function editTransaction(id) {
+      const item = data.transactions.find(transaction => transaction.id === id);
+      openTransactionForm(item.type, id);
+    }
+
+    function deleteTransaction(id) {
+      if (!confirm("Hapus transaksi ini?")) return;
+
+      data.transactions = data.transactions.filter(item => item.id !== id);
+      saveData();
+      render();
+    }
+
+    function resetData() {
+      if (!confirm("Semua transaksi akan dihapus. Lanjutkan?")) return;
+
+      data.transactions = [];
+      saveData();
+      render();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("show");
+    }
+
+    function shareWhatsApp() {
+      const income = data.transactions
+        .filter(item => item.type === "income")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const expense = data.transactions
+        .filter(item => item.type === "expense")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const message =
+`👨‍👩‍👧‍👦 *UANG KAS KELUARGA*
+*NENE KAPALA MANGGI*
+
+💰 Total pemasukan: ${formatRupiah(income)}
+💸 Total pengeluaran: ${formatRupiah(expense)}
+💵 Saldo kas: ${formatRupiah(income - expense)}
+
+Silakan buka informasi lengkap melalui aplikasi kas keluarga.`;
+
+      window.open(
+        "https://wa.me/?text=" + encodeURIComponent(message),
+        "_blank"
+      );
+    }
+
+    function contactFamily() {
+      const number = data.account.whatsapp.replace(/\D/g, "");
+
+      if (!number) {
+        alert("Nomor WhatsApp keluarga belum diatur.");
+        return;
+      }
+
+      window.open("https://wa.me/" + number, "_blank");
+    }
+
+    updateAdminView();
+    render();
+  </script>
+</body>
+</html>
