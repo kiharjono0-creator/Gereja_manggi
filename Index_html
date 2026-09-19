@@ -1,0 +1,670 @@
+12345
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panitia Pembangunan GTM Jemaat Manggi</title>
+
+  <style>
+    :root {
+      --primary: #246b4d;
+      --primary-dark: #174936;
+      --secondary: #e9f5ed;
+      --income: #16834b;
+      --expense: #d33d3d;
+      --warning: #f5a623;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f4f7f5;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(25, 65, 45, .08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 265px;
+      background: linear-gradient(180deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 24px 16px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 12px 26px;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      margin-bottom: 18px;
+    }
+
+    .brand-icon {
+      font-size: 30px;
+    }
+
+    .brand h1 {
+      font-size: 16px;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    .brand small {
+      display: block;
+      opacity: .75;
+      margin-top: 4px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: rgba(255,255,255,.82);
+      background: transparent;
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 12px;
+      margin-bottom: 5px;
+      transition: .2s;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: rgba(255,255,255,.16);
+      color: white;
+    }
+
+    .main {
+      margin-left: 265px;
+      width: calc(100% - 265px);
+      padding: 26px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: var(--primary);
+      color: white;
+      padding: 10px 13px;
+      border-radius: 10px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 800;
+      margin-top: 9px;
+    }
+
+    .stat-icon {
+      font-size: 25px;
+      background: var(--secondary);
+      padding: 10px;
+      border-radius: 13px;
+    }
+
+    .income {
+      color: var(--income);
+    }
+
+    .expense {
+      color: var(--expense);
+    }
+
+    .balance {
+      color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 17px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 17px;
+    }
+
+    .input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 11px;
+      padding: 12px 13px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(36,107,77,.12);
+    }
+
+    .transaction {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .transaction:last-child {
+      border-bottom: 0;
+    }
+
+    .transaction-left {
+      display: flex;
+      gap: 12px;
+    }
+
+    .transaction-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-size: 20px;
+      background: var(--secondary);
+    }
+
+    .transaction strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .transaction small {
+      color: var(--muted);
+      display: block;
+      margin-top: 3px;
+    }
+
+    .amount {
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .quick-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 12px 15px;
+      border-radius: 11px;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-light {
+      background: var(--secondary);
+      color: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: #fff0f0;
+      color: var(--expense);
+    }
+
+    .btn-warning {
+      background: #fff7e8;
+      color: #9a6300;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .info-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 13px 0;
+      vertical-align: top;
+    }
+
+    .info-table td:first-child {
+      color: var(--muted);
+      width: 42%;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .notice {
+      background: #fff8e7;
+      color: #825f12;
+      padding: 13px 15px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px 10px;
+      color: var(--muted);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 25px 0 5px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: .25s;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 18px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .cards,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar h2 {
+        font-size: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-box {
+        display: block;
+      }
+
+      .search-box button {
+        width: 100%;
+        margin-top: 8px;
+      }
+
+      .transaction {
+        align-items: flex-start;
+      }
+
+      .transaction .amount {
+        font-size: 13px;
+      }
+    }
+
+    @media print {
+      .sidebar,
+      .topbar,
+      .quick-actions,
+      .search-box,
+      .btn,
+      .footer {
+        display: none !important;
+      }
+
+      .main {
+        margin: 0;
+        width: 100%;
+        padding: 0;
+      }
+
+      .page {
+        display: none !important;
+      }
+
+      #laporan.page {
+        display: block !important;
+      }
+
+      .card {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🏗️</div>
+        <div>
+          <h1 id="brandName">Panitia Pembangunan GTM Jemaat Manggi</h1>
+          <small>Dashboard Kas</small>
+        </div>
+      </div>
+
+      <button class="nav-btn active" data-page="dashboard">📊 Dashboard</button>
+      <button class="nav-btn" data-page="transaksi">💳 Transaksi</button>
+      <button class="nav-btn" data-page="pembangunan">🏗️ Pembangunan</button>
+      <button class="nav-btn" data-page="laporan">📄 Laporan</button>
+      <button class="nav-btn" data-page="pengaturan">⚙️ Pengaturan Admin</button>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <button class="menu-toggle" id="menuToggle">☰</button>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSubtitle">Ringkasan kas pembangunan jemaat</p>
+        </div>
+        <button class="btn btn-light" onclick="shareWhatsApp()">📤 WhatsApp</button>
+      </div>
+
+      <!-- DASHBOARD -->
+      <section class="page active" id="dashboard">
+        <div class="cards">
+          <div class="card stat">
+            <div>
+              <div class="stat-label">Total Pemasukan</div>
+              <div class="stat-value income" id="incomeTotal">Rp 0</div>
+            </div>
+            <div class="stat-icon">💰</div>
+          </div>
+
+          <div class="card stat">
+            <div>
+              <div class="stat-label">Total Pengeluaran</div>
+              <div class="stat-value expense" id="expenseTotal">Rp 0</div>
+            </div>
+            <div class="stat-icon">💸</div>
+          </div>
+
+          <div class="card stat">
+            <div>
+              <div class="stat-label">Saldo Saat Ini</div>
+              <div class="stat-value balance" id="balanceTotal">Rp 0</div>
+            </div>
+            <div class="stat-icon">💵</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="section-title">
+              <h3>📋 Transaksi Terbaru</h3>
+              <button class="btn btn-light" onclick="showPage('transaksi')">Lihat Semua</button>
+            </div>
+            <div id="recentTransactions"></div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h3>⚡ Akses Cepat</h3>
+            </div>
+            <div class="quick-actions">
+              <button class="btn btn-light" onclick="showPage('transaksi')">🔎 Cari Transaksi</button>
+              <button class="btn btn-light" onclick="showPage('transaksi')">📋 Riwayat Transaksi</button>
+              <button class="btn btn-light" onclick="showPage('pembangunan')">🏗️ Informasi Pembangunan</button>
+              <button class="btn btn-light" onclick="showPage('laporan')">📄 Laporan</button>
+              <button class="btn btn-light" onclick="showPage('pengaturan')">⚙️ Pengaturan Admin</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSAKSI -->
+      <section class="page" id="transaksi">
+        <div class="card">
+          <div class="section-title">
+            <h3>💳 Riwayat Transaksi</h3>
+            <button class="btn btn-primary" onclick="openTransactionForm()">➕ Tambah</button>
+          </div>
+
+          <div class="search-box">
+            <input class="input" id="searchInput" placeholder="Cari nama, tanggal, atau keterangan...">
+            <select class="input" id="filterType">
+              <option value="semua">Semua Transaksi</option>
+              <option value="pemasukan">Pemasukan</option>
+              <option value="pengeluaran">Pengeluaran</option>
+            </select>
+          </div>
+
+          <div id="transactionList"></div>
+        </div>
+
+        <div class="card hidden" id="transactionFormCard" style="margin-top:20px;">
+          <div class="section-title">
+            <h3 id="transactionFormTitle">Tambah Transaksi</h3>
+            <button class="btn btn-danger" onclick="closeTransactionForm()">Tutup</button>
+          </div>
+
+          <form id="transactionForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Jenis Transaksi</label>
+                <select class="input" id="type" required>
+                  <option value="pemasukan">Pemasukan</option>
+                  <option value="pengeluaran">Pengeluaran</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Tanggal</label>
+                <input class="input" type="date" id="date" required>
+              </div>
+
+              <div class="form-group">
+                <label>Nama</label>
+                <input class="input" id="person" placeholder="Nama pemberi/penerima" required>
+              </div>
+
+              <div class="form-group">
+                <label>Jumlah</label>
+                <input class="input" type="number" id="amount" min="1" placeholder="Contoh: 500000" required>
+              </div>
+
+              <div class="form-group full">
+                <label>Keterangan</label>
+                <textarea id="description" rows="3" placeholder="Keterangan transaksi" required></textarea>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">💾 Simpan Transaksi</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- PEMBANGUNAN -->
+      <section class="page" id="pembangunan">
+        <div class="card">
+          <div class="section-title">
+            <h3>🏗️ Informasi Pembangunan</h3>
+            <button class="btn btn-primary admin-only" onclick="editInformation()">✏️ Edit</button>
+          </div>
+
+          <table class="info-table">
+            <tr>
+              <td>Nama Panitia</td>
+              <td id="infoCommittee">Panitia Pembangunan GTM Jemaat Manggi</td>
+            </tr>
+            <tr>
+              <td>Penanggung Jawab</td>
+              <td id="infoResponsible">Paulus Pattola</td>
+            </tr>
+            <tr>
+              <td>Nomor Rekening</td>
+              <td id="infoAccount">Belum diisi</td>
+            </tr>
+            <tr>
+              <td>WhatsApp Panitia</td>
+              <td id="infoWhatsapp">Belum diisi</td>
+            </tr>
+            <tr>
+              <td>Keterangan</td>
+              <td id="infoDescription">Informasi pembangunan</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- LAPORAN -->
+      <section class="page" id="laporan">
+        <div class="card">
+          <div class="section-title">
+            <h3>📄 Laporan Keuangan</h3>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="window.print()">🖨️ Cetak</button>
+              <button class="btn btn-light" onclick="window.print()">📄 Simpan PDF</button>
+            </div>
+          </div>
+
+          <table class="info-table">
+            <tr>
+              <td>Total Pemasukan</td>
+              <td class="income"><strong id="reportIncome">Rp 0</strong></td>
+            </tr>
+            <tr>
+              <td>Total Pengeluaran</td
